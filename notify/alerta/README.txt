@@ -14,7 +14,7 @@ curl -XPOST http://localhost:8000/alert \
       "environment": "Production",
       "event": "HttpServerErssrors",
       "group": "Web",
-      "origin": "curl",
+      "origin": "undefine",
       "resource": "web02",
       "service": [
         "example.com"

@@ -32,6 +32,14 @@ var (
 		},
 	}
 
+	DefaultAlertaConfig = AlertaConfig{
+		NotifierConfig: NotifierConfig{
+			VSendResolved: true,
+		},
+
+		Customer: nil,
+	}
+
 	// DefaultEmailConfig defines default values for Email configurations.
 	DefaultEmailConfig = EmailConfig{
 		NotifierConfig: NotifierConfig{
@@ -409,12 +417,45 @@ type WebhookConfig struct {
 
 	// URL to send POST request to.
 	URL *URL `yaml:"url" json:"url"`
+
 }
 
 // UnmarshalYAML implements the yaml.Unmarshaler interface.
 func (c *WebhookConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	*c = DefaultWebhookConfig
 	type plain WebhookConfig
+	if err := unmarshal((*plain)(c)); err != nil {
+		return err
+	}
+	if c.URL == nil {
+		return fmt.Errorf("missing URL in webhook config")
+	}
+	if c.URL.Scheme != "https" && c.URL.Scheme != "http" {
+		return fmt.Errorf("scheme required for webhook url")
+	}
+	return nil
+}
+
+//
+// WebhookConfig configures notifications via a generic webhook.
+type AlertaConfig struct {
+	NotifierConfig `yaml:",inline" json:",inline"`
+
+	HTTPConfig *commoncfg.HTTPClientConfig `yaml:"http_config,omitempty" json:"http_config,omitempty"`
+
+	// URL to send POST request to.
+	URL *URL `yaml:"url" json:"url"`
+
+	// Customer view alert (optional)
+	Customer *string `yaml:"url" json:"customer"`
+
+
+}
+
+// UnmarshalYAML implements the yaml.Unmarshaler interface.
+func (c *AlertaConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	*c = DefaultAlertaConfig
+	type plain AlertaConfig
 	if err := unmarshal((*plain)(c)); err != nil {
 		return err
 	}

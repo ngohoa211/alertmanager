@@ -32,7 +32,7 @@ func TestWebhookRetry(t *testing.T) {
 		require.NoError(t, err)
 	}
 	notifier, err := New(
-		&config.WebhookConfig{
+		&config.AlertaConfig{
 			URL:        &config.URL{URL: u},
 			HTTPConfig: &commoncfg.HTTPClientConfig{},
 		},

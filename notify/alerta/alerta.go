@@ -36,7 +36,7 @@ var userAgentHeader = fmt.Sprintf("Alertmanager/%s", version.Version)
 
 // Notifier implements a Notifier for generic webhooks.
 type Notifier struct {
-	conf    *config.WebhookConfig
+	conf    *config.AlertaConfig
 	tmpl    *template.Template
 	logger  log.Logger
 	client  *http.Client
@@ -44,8 +44,8 @@ type Notifier struct {
 }
 
 // New returns a new Webhook.
-func New(conf *config.WebhookConfig, t *template.Template, l log.Logger) (*Notifier, error) {
-	client, err := commoncfg.NewClientFromConfig(*conf.HTTPConfig, "webhook", false)
+func New(conf *config.AlertaConfig, t *template.Template, l log.Logger) (*Notifier, error) {
+	client, err := commoncfg.NewClientFromConfig(*conf.HTTPConfig, "alerta", false)
 	if err != nil {
 		return nil, err
 	}
